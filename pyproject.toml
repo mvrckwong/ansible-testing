@@ -1,13 +1,10 @@
 [project]
-name = "ansible-testing"
+name = "ansible-infrastructure"
 version = "0.1.0"
-description = "Add your description here"
+description = "Ansible infrastructure for my personal projects"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
-
-[dependency-groups]
-infra = [
+dependencies = [
     "ansible>=12.2.0",
     "ansible-core>=2.19.4",
     "ansible-lint>=25.11.1",

@@ -1,0 +1,10 @@
+# Ansible runtime artifacts
+*.retry
+*.log
+*.tmp
+.cache/
+__pycache__/
+
+# Editor folders
+.vscode/
+.idea/

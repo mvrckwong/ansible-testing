@@ -1,0 +1,47 @@
+version: "3"
+
+vars:
+  INFRA_DIR: .infra/infrastructure-ansible
+  INVENTORY: "{{.INFRA_DIR}}/inventory/hosts.yml"
+  PLAYBOOK_DIR: "{{.INFRA_DIR}}/playbooks"
+  ANSIBLE_CFG: "{{.INFRA_DIR}}/ansible.cfg"
+  UV_GROUP: infra
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  install:
+    desc: Sync Ansible tooling via uv using the infra dependency group
+    cmds:
+      - uv sync --group {{.UV_GROUP}}
+
+  lint:
+    desc: Run ansible-lint on local playbooks
+    env:
+      ANSIBLE_CONFIG: "{{.ANSIBLE_CFG}}"
+    cmds:
+      - uv run --group {{.UV_GROUP}} ansible-lint {{.PLAYBOOK_DIR}}
+
+  ping:
+    desc: Validate SSH connectivity against every inventory host
+    env:
+      ANSIBLE_CONFIG: "{{.ANSIBLE_CFG}}"
+    cmds:
+      - uv run --group {{.UV_GROUP}} ansible -i {{.INVENTORY}} all -m ping
+
+  site:
+    desc: Apply the site.yml baseline to all hosts
+    env:
+      ANSIBLE_CONFIG: "{{.ANSIBLE_CFG}}"
+    cmds:
+      - uv run --group {{.UV_GROUP}} ansible-playbook -i {{.INVENTORY}} {{.PLAYBOOK_DIR}}/site.yml
+
+  configure-vm:
+    desc: Configure the lab VM entrypoint
+    env:
+      ANSIBLE_CONFIG: "{{.ANSIBLE_CFG}}"
+    cmds:
+      - uv run --group {{.UV_GROUP}} ansible-playbook -i {{.INVENTORY}} {{.PLAYBOOK_DIR}}/configure-vm.yml

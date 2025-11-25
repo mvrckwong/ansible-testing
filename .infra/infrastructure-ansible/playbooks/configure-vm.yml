@@ -1,0 +1,6 @@
+---
+- name: Configure lab VM
+  hosts: my-vm
+  become: true
+  roles:
+    - base_config
